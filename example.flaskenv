@@ -1,0 +1,6 @@
+SECRET_KEY=
+FLASK_APP=projects.py
+TOKEN_EXPIRES_IN=86400
+DATABASE_URL=postgres://user:secret@127.0.0.1:5432/projects-app
+FLASK_DEBUG=1
+FLASK_RUN_PORT=8034

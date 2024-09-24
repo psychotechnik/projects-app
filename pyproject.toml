@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[project]
+name = "projects"
+version = "0.0.1"
+dependencies = [
+  "alembic",
+  "apispec[marshmallow]",
+  "apispec-webframeworks",
+  "Click",
+  "Flask",
+  "Flask-HTTPAuth",
+  "Flask-Migrate",
+  "Flask-SQLAlchemy",
+  "flask-swagger-ui",
+  "psycopg2-binary",
+  "python-dotenv",
+  "pytest",
+  "PyJWT",
+  "SQLAlchemy",
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Philip Kalinsky", email = "philip@kalinsky.me"},
+]
+description = "Project Management app"
+
+[project.scripts]
+projects = "projects.entrypoints.flask.projects:app"

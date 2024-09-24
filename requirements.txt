@@ -1,0 +1,15 @@
+alembic
+apispec[marshmallow]
+apispec-webframeworks
+Click
+Flask
+Flask-HTTPAuth
+Flask-Migrate
+Flask-SQLAlchemy
+flask-swagger-ui
+psycopg2-binary
+python-dotenv
+pytest
+PyJWT
+SQLAlchemy
+
