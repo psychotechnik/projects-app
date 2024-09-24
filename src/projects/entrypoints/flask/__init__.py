@@ -33,6 +33,15 @@ def create_app(config_class=Config):
         openapi_version="3.0.3",
         plugins=[FlaskPlugin(), MarshmallowPlugin()],
     )   
+        
+    spec.components.security_scheme(
+    "bearerAuth",
+    {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+    }
+    )
           
     spec.tag({
     'name': 'Authentication',

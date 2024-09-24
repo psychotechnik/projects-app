@@ -23,6 +23,8 @@ def get_user(id):
     get:
       summary: Retrieve a user by ID
       description: Retrieve a specific user by their ID.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - User
       parameters:
@@ -55,6 +57,8 @@ def user_by_username(username):
     get:
       summary: Retrieve a user by username
       description: Retrieve a user based on their username.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - User
       parameters:
@@ -96,6 +100,8 @@ def get_users():
     get:
       summary: Retrieve all users
       description: Get a list of all users.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - User
       responses:
@@ -137,6 +143,8 @@ def promote_to_manager(username):
     patch:
       summary: Promote a user to manager
       description: Grant manager privileges to a specific user.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - User
       parameters:
@@ -175,6 +183,8 @@ def create_user():
     post:
       summary: Create a new user
       description: Create a new user account. Only managers are allowed to create users.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - User
       requestBody:

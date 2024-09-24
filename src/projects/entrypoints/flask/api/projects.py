@@ -5,7 +5,7 @@ from projects.entrypoints.flask.api import bp
 from projects.entrypoints.flask.api.errors import bad_request
 from projects.entrypoints.flask import db
 from flask import jsonify, request
-from projects.entrypoints.flask.schema import UserSchema
+from projects.entrypoints.flask.schema import ProjectSchema
 
 # Get all
 @bp.route('/projects', methods=['GET'])
@@ -16,6 +16,8 @@ def get_projects():
     get:
       summary: Retrieve all projects
       description: Get a list of all projects.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
       tags:
         - Project
       responses:
@@ -23,10 +25,7 @@ def get_projects():
           description: Successfully retrieved list of projects.
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProjectSchema'
+              schema: ProjectSchema
         401:
           description: Unauthorized access.
     """
@@ -44,6 +43,8 @@ def get_project(id):
     get:
       summary: Retrieve a project by ID
       description: Get details of a specific project by its ID.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
       tags:
         - Project
       parameters:
@@ -80,6 +81,8 @@ def create_project():
     post:
       summary: Create a new project
       description: Create a new project. Only users with manager role can create projects.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
       tags:
         - Project
       requestBody:
@@ -124,6 +127,8 @@ def update_project(id):
     put:
       summary: Update an existing project
       description: Update the details of an existing project by its ID. Only users with manager role can update projects.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
       tags:
         - Project
       parameters:
@@ -154,6 +159,9 @@ def update_project(id):
               schema: ProjectSchema
         400:
           description: Bad request, missing required fields.
+          content:
+            application/json:
+              schema: ProjectSchema
         401:
           description: Unauthorized access.
         404:
@@ -173,6 +181,8 @@ def delete_project(id):
     delete:
       summary: Delete a project
       description: Delete a specific project by its ID. Only users with manager role can delete projects.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
       tags:
         - Project
       parameters:

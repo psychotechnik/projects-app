@@ -4,7 +4,7 @@ from projects.entrypoints.flask.api.auth import token_auth
 from projects.entrypoints.flask.api import bp
 from projects.entrypoints.flask import db
 from flask import jsonify, request
-from projects.entrypoints.flask.schema import UserSchema
+from projects.entrypoints.flask.schema import TaskSchema
 
 # Get all tasks for a specific project
 @bp.route('/projects/<int:project_id>/tasks', methods=['GET'])
@@ -15,6 +15,8 @@ def get_tasks(project_id):
     get:
       summary: Get all tasks for a project
       description: Retrieve all tasks associated with a specific project.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - Task
       parameters:
@@ -49,6 +51,8 @@ def create_task(project_id):
     post:
       summary: Add a new task to a project
       description: Create a new task for a specified project.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - Task
       parameters:
@@ -90,6 +94,8 @@ def update_task_status(project_id, task_id):
     put:
       summary: Update the status of a task
       description: Change the status of an existing task.
+      security:
+        - bearerAuth: [] # Using tokens for authentication
       tags:
         - Task
       parameters:
