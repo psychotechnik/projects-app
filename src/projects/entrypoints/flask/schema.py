@@ -13,3 +13,10 @@ class ProjectSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
     description = fields.Str(allow_none=True)
+    
+class TaskSchema(Schema):
+    id = fields.Int(required=True)
+    project_id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    status = fields.Str(allow_none=True)
+

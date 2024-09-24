@@ -32,9 +32,35 @@ def create_app(config_class=Config):
         version="1.0.0",
         openapi_version="3.0.3",
         plugins=[FlaskPlugin(), MarshmallowPlugin()],
-    )     
+    )   
+          
+    spec.tag({
+    'name': 'Authentication',
+    'description': 'Operations related to user authentication',
+    'x-order': 1
+    })
+
+    spec.tag({
+        'name': 'User',
+        'description': 'Operations related to user management',
+        'x-order': 2
+    })
     
+    spec.tag({
+    'name': 'Project',
+    'description': 'Operations related to project management',
+    'x-order': 3
+    })
+
+    spec.tag({
+        'name': 'Task',
+        'description': 'Operations related to task management in a project',
+        'x-order': 4
+    })
+        
+        
     app.spec = spec 
+    
 
     from projects.entrypoints.flask.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -48,11 +74,18 @@ def create_app(config_class=Config):
     from projects.entrypoints.flask.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
     
+    
     # Registration of routes and specifications
+    from projects.entrypoints.flask.api.tokens import register_routes_and_specs
+    register_routes_and_specs(app)
+    
     from projects.entrypoints.flask.api.users import register_routes_and_specs
     register_routes_and_specs(app)
     
     from projects.entrypoints.flask.api.projects import register_routes_and_specs
+    register_routes_and_specs(app)
+    
+    from projects.entrypoints.flask.api.tasks import register_routes_and_specs
     register_routes_and_specs(app)
 
     # Route to return the specification in JSON format

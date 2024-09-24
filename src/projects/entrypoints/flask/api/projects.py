@@ -16,6 +16,8 @@ def get_projects():
     get:
       summary: Retrieve all projects
       description: Get a list of all projects.
+      tags:
+        - Project
       responses:
         200:
           description: Successfully retrieved list of projects.
@@ -42,6 +44,8 @@ def get_project(id):
     get:
       summary: Retrieve a project by ID
       description: Get details of a specific project by its ID.
+      tags:
+        - Project
       parameters:
         - name: id
           in: path
@@ -76,6 +80,8 @@ def create_project():
     post:
       summary: Create a new project
       description: Create a new project. Only users with manager role can create projects.
+      tags:
+        - Project
       requestBody:
         required: true
         content:
@@ -118,6 +124,8 @@ def update_project(id):
     put:
       summary: Update an existing project
       description: Update the details of an existing project by its ID. Only users with manager role can update projects.
+      tags:
+        - Project
       parameters:
         - name: id
           in: path
@@ -165,6 +173,8 @@ def delete_project(id):
     delete:
       summary: Delete a project
       description: Delete a specific project by its ID. Only users with manager role can delete projects.
+      tags:
+        - Project
       parameters:
         - name: id
           in: path

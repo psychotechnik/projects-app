@@ -23,6 +23,8 @@ def get_user(id):
     get:
       summary: Retrieve a user by ID
       description: Retrieve a specific user by their ID.
+      tags:
+        - User
       parameters:
         - name: id
           in: path
@@ -53,6 +55,8 @@ def user_by_username(username):
     get:
       summary: Retrieve a user by username
       description: Retrieve a user based on their username.
+      tags:
+        - User
       parameters:
         - name: username
           in: path
@@ -92,6 +96,8 @@ def get_users():
     get:
       summary: Retrieve all users
       description: Get a list of all users.
+      tags:
+        - User
       responses:
         200:
           description: Successfully retrieved all users.
@@ -131,6 +137,8 @@ def promote_to_manager(username):
     patch:
       summary: Promote a user to manager
       description: Grant manager privileges to a specific user.
+      tags:
+        - User
       parameters:
         - name: username
           in: path
@@ -167,6 +175,8 @@ def create_user():
     post:
       summary: Create a new user
       description: Create a new user account. Only managers are allowed to create users.
+      tags:
+        - User
       requestBody:
         required: true
         content:
