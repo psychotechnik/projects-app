@@ -152,8 +152,13 @@ To run the project locally, follow these steps:
    ```bash
    flask db upgrade
    ```
+6. Seed the manager user by running the following flask command. The api token will be printed after the command completes.
 
-6. Start the Flask application:
+    ```bash
+    flask --app src/projects/entrypoints/flask/projects auth create-manager --username=manager --email=manager@example.com --password=secret
+    ```
+
+7. Start the Flask application:
 
    ```bash
    flask --app src/projects/entrypoints/flask/projects run --debug
