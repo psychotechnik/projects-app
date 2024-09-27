@@ -9,7 +9,6 @@ tasks = db.Table(
     Column("project_id", Integer, ForeignKey("projects.id"), nullable=False),
     Column("name", String(100), nullable=False),
     Column("status", String(100), nullable=True)
-    # Column("status", Enum(task.TaskStatusEnum), default=task.TaskStatusEnum.NEW, nullable=False)
 )
 
 def start_mappers():

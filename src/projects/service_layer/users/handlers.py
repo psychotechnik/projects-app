@@ -49,3 +49,10 @@ def check_token(token, repo: repository.AbstractRepository):
 def promote_to_manager(user: User, repo: repository.AbstractRepository) -> None:
     user.is_manager = True
     repo.db.session.commit()
+from flask import abort
+def delete_user(id: int, repo: repository.AbstractRepository):
+    user = repo.get(id)
+    if not user:  
+        abort(404, description="User not found")
+    repo.delete(user) 
+    repo.db.session.commit() 

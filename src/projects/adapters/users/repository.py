@@ -47,7 +47,6 @@ class FlaskSqlAlchemyRepository(AbstractRepository):
     def __init__(self, db: flask_sqlalchemy.SQLAlchemy):
         self.db = db
 
-
     def create(self, user: user.User):
         self.db.session.add(user)
 

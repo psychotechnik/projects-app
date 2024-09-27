@@ -1,6 +1,5 @@
-#from dataclasses import dataclass
+import secrets
 from typing import Optional
-#from time import time
 from datetime import datetime, timezone, timedelta
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,6 +23,14 @@ class User:
         self.email = email
         self.is_manager = is_manager
 
+    def __eq__(self, other):
+        if not isinstance(other, User):
+            return False
+        return other.username == self.username
+
+    def __hash__(self):
+        return hash(self.id)
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -32,6 +39,13 @@ class User:
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def issue_token(self, expires_in: int=86400):
+        now = datetime.now(timezone.utc)
+        token = secrets.token_hex(16)
+        token_expiration = now + timedelta(seconds=expires_in)
+        self.token = token
+        self.token_expiration = token_expiration
 
     def get_roles(self):
         return "manager" if self.is_manager else None

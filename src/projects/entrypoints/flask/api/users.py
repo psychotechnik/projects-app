@@ -1,6 +1,7 @@
 #import sqlalchemy as sa
 from flask import (
     request, 
+    jsonify,
     #url_for, 
     #abort,
 )
@@ -13,6 +14,7 @@ from projects.entrypoints.flask.api.auth import token_auth
 from projects.entrypoints.flask.api.errors import bad_request
 from projects.entrypoints.flask import db
 from projects.entrypoints.flask.schema import UserSchema
+from projects.entrypoints.flask.api.errors import error_response 
 
 
 @bp.route('/users/<int:id>', methods=['GET'])
@@ -43,13 +45,15 @@ def get_user(id):
         401:
           description: Unauthorized access.
         404:
-          description: User not found.
+          description: User Not Found.
     """ 
     repo = repository.FlaskSqlAlchemyRepository(db)
     user = handlers.get_user(id, repo)
+    if not user:
+        return error_response(404, "User Not Found")
     return user.to_dict()
 
-@bp.route("/users/user-by-username/<username>")
+@bp.route("/users/user-by-username/<username>", methods=['GET'])
 @token_auth.login_required
 def user_by_username(username):
     """
@@ -83,10 +87,12 @@ def user_by_username(username):
         401:
           description: Unauthorized access.
         404:
-          description: User not found.
+          description: User Not Found.
     """  
     repo = repository.FlaskSqlAlchemyRepository(db)
     user = handlers.get_user_by_username(username, repo)
+    if not user:
+        return error_response(404, "User Not Found")
     return {
         "username": user.username,
         "email": user.email,
@@ -172,6 +178,8 @@ def promote_to_manager(username):
     """
     repo = repository.FlaskSqlAlchemyRepository(db)
     user = handlers.get_user_by_username(username, repo)
+    if not user:
+        return error_response(404, "User Not Found")
     handlers.promote_to_manager(user, repo)
     return {"status": "ok"}, 200
 
@@ -235,6 +243,38 @@ def create_user():
     handlers.create_user(user, repo)
 
     return user.to_dict(), 201, {}
+  
+# Remove user
+@bp.route('/user/<int:id>', methods=['DELETE'])
+@token_auth.login_required(role='manager')
+def delete_user(id):
+    """
+    ---
+    delete:
+      summary: Delete a user
+      description: Delete a specific user by its ID. Only users with manager role can delete users.
+      security:
+        - bearerAuth: []  # Using tokens for authentication
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user to delete.
+      responses:
+        204:
+          description: User successfully deleted.
+        401:
+          description: Unauthorized access.
+        404:
+          description: Not Found.
+    """   
+    repo = repository.FlaskSqlAlchemyRepository(db)
+    handlers.delete_user(id, repo)
+    return jsonify({"status": "User deleted"}), 204  
     
 def register_routes_and_specs(app):
     with app.app_context(): 
@@ -243,6 +283,7 @@ def register_routes_and_specs(app):
         app.spec.path(view=get_users)
         app.spec.path(view=promote_to_manager)
         app.spec.path(view=create_user)
+        app.spec.path(view=delete_user)
       
 """
 @bp.route('/users/<int:id>', methods=['PUT'])

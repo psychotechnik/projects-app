@@ -1,10 +1,13 @@
 from projects.adapters.tasks import repository as task_repository
+from projects.adapters.projects import repository as project_repository
 from projects.service_layer.tasks import handlers as task_handlers
+from projects.service_layer.projects import handlers as project_handlers
 from projects.entrypoints.flask.api.auth import token_auth
 from projects.entrypoints.flask.api import bp
 from projects.entrypoints.flask import db
 from flask import jsonify, request
 from projects.entrypoints.flask.schema import TaskSchema
+from projects.entrypoints.flask.api.errors import error_response 
 
 # Get all tasks for a specific project
 @bp.route('/projects/<int:project_id>/tasks', methods=['GET'])
@@ -33,13 +36,13 @@ def get_tasks(project_id):
             application/json:
               schema: TaskSchema
         404:
-          description: No tasks found for the given project.
+          description: No tasks or project found.
     """
     repo = task_repository.SqlAlchemyTaskRepository(db.session)
     tasks = task_handlers.get_tasks_for_project(project_id, repo)
     data = [{"id": task.id, "name": task.name, "status": task.status} for task in tasks]
     if not len(data):
-        return  jsonify({"error": "Not Found"}), 404
+      return error_response(404, "No tasks or project found")
     return jsonify(data), 200
 
 # Adding a new task to a project
@@ -79,8 +82,14 @@ def create_task(project_id):
           content:
             application/json:
               schema: TaskSchema
+        404:
+          description: No project found.
     """
     data = request.get_json()
+    project_repo = project_repository.SqlAlchemyProjectRepository(db.session)
+    project = project_handlers.get_project(project_id, project_repo)
+    if not project:
+      return error_response(404, "No project found")
     repo = task_repository.SqlAlchemyTaskRepository(db.session)
     task = task_handlers.create_task(project_id, data.get("name"),  data.get("status"), repo)
     return jsonify({"id": task.id, "name": task.name, "status": task.status}), 201
@@ -126,10 +135,18 @@ def update_task_status(project_id, task_id):
           content:
             application/json:
               schema: TaskSchema
+        404:
+          description: No project found.      
     """
     data = request.get_json()
+    project_repo = project_repository.SqlAlchemyProjectRepository(db.session)
+    project = project_handlers.get_project(project_id, project_repo)
+    if not project:
+      return error_response(404, "No project found")
     repo = task_repository.SqlAlchemyTaskRepository(db.session)
-    task = task_handlers.update_task_status(project_id, task_id, data["status"], repo)
+    task = task_handlers.update_task_status(project_id, task_id, data.get("status"), repo)
+    if not task:
+      return error_response(404, "No task or project found")
     return jsonify({"id": task.id, "name": task.name, "status": task.status})
 
 def register_routes_and_specs(app):

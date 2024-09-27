@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Table
-from projects.domain import project, task
+from sqlalchemy import Column, Integer, String
+from projects.domain import project
 from projects.entrypoints.flask import db
 from sqlalchemy.orm import registry
 

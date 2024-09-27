@@ -6,6 +6,7 @@ from projects.entrypoints.flask.api.errors import bad_request
 from projects.entrypoints.flask import db
 from flask import jsonify, request
 from projects.entrypoints.flask.schema import ProjectSchema
+from projects.entrypoints.flask.api.errors import error_response 
 
 # Get all
 @bp.route('/projects', methods=['GET'])
@@ -70,7 +71,7 @@ def get_project(id):
     if project:
         return jsonify({"id": project.id, "name": project.name, "description": project.description})
     else:
-        return jsonify({"error": "Not Found"}), 404
+        return error_response(404, "Project not found")
 
 # Create new
 @bp.route('/projects', methods=['POST'])
@@ -170,6 +171,8 @@ def update_project(id):
     data = request.get_json()
     repo = project_repository.SqlAlchemyProjectRepository(db.session)
     project = project_handlers.update_project(id, data["name"], data.get("description"), repo)
+    if not project:
+      return error_response(404, "Project not found")
     return jsonify({"id": project.id, "name": project.name, "description": project.description})
 
 # Remove project
@@ -201,6 +204,9 @@ def delete_project(id):
           description: Project not found.
     """   
     repo = project_repository.SqlAlchemyProjectRepository(db.session)
+    project = project_handlers.get_project(id, repo)
+    if not project:
+      return error_response(404, "Project not found")
     project_handlers.delete_project(id, repo)
     return jsonify({"status": "Project deleted"}), 204
 

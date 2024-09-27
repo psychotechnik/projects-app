@@ -39,7 +39,7 @@ def create_app(config_class=Config):
     {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT",
+        "bearerFormat": "JWT",  
     }
     )
           
